@@ -5,14 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Digimon Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+          background-color: black;
+      }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 id="digimonName" class="text-center"></h1>
-        <div class="text-center">
-            <img id="digimonImage" src="" alt="Digimon Image" class="img-fluid" style="max-width: 300px;">
+
+  <!-- logo -->
+  <div class=" mt-5">
+    <a href="apiHome.html" class="d-flex justify-content-center">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/The_Digimon_Logo.svg/2560px-The_Digimon_Logo.svg.png" width="50%" href="apiHome.html"/>
+    </a>
+  </div>
+
+    <div class="container mt-5 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <h1 id="digimonName" class="text-center mt-2" style="color:orange"></h1>
+        <img class="card-img-top" id="digimonImage"  >
+        <div class="card-body">
+          <p class="card-text text-center" id="digimonLevel">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
-        <p id="digimonLevel" class="text-center mt-3"></p>
+      </div>
     </div>
 
     <script>
