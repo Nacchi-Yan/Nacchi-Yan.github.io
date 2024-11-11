@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Digimon API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: black;
+        }
+
+        .row{
+         --bs-gutter-x: 0;
+        }
+
+        a{
+            color:orange;
+            text-decoration: none;
+            font-size:30px
+        }
+
+        .btn-primary{
+            width:50%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- navbar with search -->
+<nav class="navbar" style="background:#eceeea;">
+    <div class="container-fluid">
+        <form class="d-flex" role="search">
+            <input id="digimonName" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button onclick="fetchData()" class="btn btn-outline-success" type="button">Search</button>
+        </form>
+    </div>
+</nav>
+
+<!-- banner -->
+<section class="align-items-center">
+    <div class="d-flex justify-content-center">
+        <img src="https://static.zerochan.net/Digimon.Adventure.full.3727633.jpg" class="img-fluid"/>
+    </div>
+</section>
+<br>
+<br>
+<!-- logo -->
+<div class="d-flex justify-content-center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/The_Digimon_Logo.svg/2560px-The_Digimon_Logo.svg.png" width="50%"/>
+</div>
+
+<br>
+
+
+<!-- Gallery -->
+<div class="d-flex justify-content-center mt-3 mb-3">
+    <button onclick="displayDigimon()" class="btn btn-primary">Show All</button>
+</div>
+
+<div class = "row justify-content-center" id="digimonGallery"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+  // this is my api https://digimon-api.vercel.app/digimon
+    async function fetchData() {
+        try {
+            const digimonName = document.getElementById("digimonName").value.toLowerCase();
+            const response = await fetch(`https://digimon-api.vercel.app/api/digimon/name/${digimonName}`);
+
+            if (!response.ok) {
+                throw new Error("Could not find resource");
+            }
+
+            const data = await response.json();
+
+            // Hide all cards
+            hideAllDigimonCards();
+
+            // Show only the card corresponding to the searched digimonName
+            showSelectedDigimonCard(digimonName);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    //   hide all cards after searching except the one seearched
+    function hideAllDigimonCards() {
+        const digimonGallery = document.getElementById("digimonGallery");
+        const cards = digimonGallery.getElementsByClassName("card");
+
+        // Hide all cards
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].style.display = "none";
+        }
+    }
+
+    function showSelectedDigimonCard(selectedDigimonName) {
+        const digimonGallery = document.getElementById("digimonGallery");
+        const selectedCard = document.getElementById(selectedDigimonName);
+
+        // Show the card corresponding to the selected digimonName
+        if (selectedCard) {
+            selectedCard.style.display = "block";
+        }
+    }
+
+    async function getDigimonData() {
+        const response = await fetch(`https://digimon-api.vercel.app/api/digimon`);
+        const digimonData = await response.json();
+        return digimonData;
+    }
+    //   the gallery
+    async function displayDigimon() {
+        const digimonData = await getDigimonData();
+        const digimonGallery = document.getElementById("digimonGallery");
+
+        digimonData.forEach((digimon) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.style = "width: 300px; margin-bottom:10px; margin-right:10px;";
+
+            const img = document.createElement("img");
+            img.className = "card-img-top";
+            img.src = digimon.img;
+            img.alt = "Digimon Sprite";
+
+            const cardBody = document.createElement("div");
+            cardBody.className = "card-body";
+
+            const nameLink = document.createElement("a");
+            nameLink.href = `apiView.html?name=${digimon.name}`;
+            nameLink.textContent = digimon.name; 
+            nameLink.style = "text-align: center; font-weight:bold; display:block;";
+        
+           
+            const levelParagraph = document.createElement("p");
+            levelParagraph.textContent = `Digimon Level: ${digimon.level}`;
+            levelParagraph.style ="text-align: center; ";
+
+            cardBody.appendChild(nameLink);
+            cardBody.appendChild(levelParagraph);
+
+            card.appendChild(img);
+            card.appendChild(cardBody);
+
+            card.id = digimon.name.toLowerCase(); // Set id based on digimon name
+            digimonGallery.appendChild(card);
+        });
+    }
+
+    // Initial display of Digimon when the page loads
+    displayDigimon();
+</script>
+</body>
+</html>
